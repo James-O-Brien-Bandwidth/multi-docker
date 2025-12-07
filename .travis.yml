@@ -1,0 +1,18 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  # -f -------> is used to override the default Dockerfile name
+  # . -------> is used to specify the build context typically. We instead want the client directory to be used
+  - docker build -t 114338136/react-test -f ./client/Dockerfile.dev ./client
+
+# used for running tests primarily ... coverage part ensures we get 0/1 after running
+script:
+  - docker run 114338136/react-test npm run test -- --coverage
+
+after_success:
+  - docker build -t 114338136/multi-client ./client
+  - docker build -t 114338136/multi-nginx ./nginx
+  - docker build -t 114338136/multi-server ./server
+  - docker build -t 114338136/multi-worker ./worker
