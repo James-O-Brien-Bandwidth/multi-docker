@@ -15,10 +15,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build React test image
-        run: docker build -t 114338136/multi-client -f ./client/Dockerfile .
+        run: docker build -t ${{ secrets.DOCKER_ID }}/react-test -f ./client/Dockerfile.dev ./client
 
       - name: Run tests in container
-        run: docker run -e CI=true 114338136/react-test npm run test -- --coverage
+        run: docker run -e CI=true ${{ secrets.DOCKER_ID }}/react-test npm run test -- --coverage
+
 
   build-and-push:
     runs-on: ubuntu-latest
@@ -39,14 +40,14 @@ jobs:
       - name: Build images
         # this mirrors your after_success block
         run: |
-          docker build -t 114338136/multi-client -f ./client/Dockerfile .
-          docker build -t 114338136/multi-nginx ./nginx
-          docker build -t 114338136/multi-server ./server
-          docker build -t 114338136/multi-worker ./worker
+          docker build -t ${{ secrets.DOCKER_ID }}/multi-client -f ./client/Dockerfile .
+          docker build -t ${{ secrets.DOCKER_ID }}/multi-nginx ./nginx
+          docker build -t ${{ secrets.DOCKER_ID }}/multi-server ./server
+          docker build -t ${{ secrets.DOCKER_ID }}/multi-worker ./worker
 
       - name: Push images
         run: |
-          docker push 114338136/multi-client
-          docker push 114338136/multi-nginx
-          docker push 114338136/multi-server
-          docker push 114338136/multi-worker
+          docker push ${{ secrets.DOCKER_ID }}/multi-client
+          docker push ${{ secrets.DOCKER_ID }}/multi-nginx
+          docker push ${{ secrets.DOCKER_ID }}/multi-server
+          docker push ${{ secrets.DOCKER_ID }}/multi-worker
