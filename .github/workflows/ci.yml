@@ -18,7 +18,7 @@ jobs:
         run: docker build -t 114338136/react-test -f ./client/Dockerfile.dev ./client
 
       - name: Run tests in container
-        run: docker run 114338136/react-test npm run test -- --coverage
+        run: docker run -e CI=true 114338136/react-test npm run test -- --coverage
 
   build-and-push:
     runs-on: ubuntu-latest
