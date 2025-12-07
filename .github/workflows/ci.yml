@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build React test image
-        run: docker build -t ***/multi-client -f ./client/Dockerfile .
+        run: docker build -t 114338136/multi-client -f ./client/Dockerfile .
 
       - name: Run tests in container
         run: docker run -e CI=true 114338136/react-test npm run test -- --coverage
@@ -39,7 +39,7 @@ jobs:
       - name: Build images
         # this mirrors your after_success block
         run: |
-          docker build -t ***/multi-client -f ./client/Dockerfile .
+          docker build -t 114338136/multi-client -f ./client/Dockerfile .
           docker build -t 114338136/multi-nginx ./nginx
           docker build -t 114338136/multi-server ./server
           docker build -t 114338136/multi-worker ./worker
