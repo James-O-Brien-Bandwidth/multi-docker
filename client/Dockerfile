@@ -1,24 +1,19 @@
-FROM node:20-alpine
+FROM node:16-alpine AS builder
 
 WORKDIR /app
 
-# Install deps from lockfile
-COPY package*.json ./
+# Install deps from client's package.json
+COPY client/package*.json ./
 RUN npm install
 
-# Copy source
-COPY . .
-
-# Build process for building production assets. new 'build' folder will be generated with path /app/build
+# Copy client source
+COPY client/. .
 RUN npm run build
 
-# CRA in Docker niceties
-FROM nginx
-#ENV HOST=0.0.0.0
-#ENV CHOKIDAR_USEPOLLING=true
-EXPOSE 3000
-# overwrite default nginx website with our build folder
-COPY ./nginx/default.conf etc/nginx/conf.d/default.conf
-COPY --from=builder /app/build /usr/share/nginx/html
+FROM nginx:alpine
 
-CMD ["npm", "run", "start"]
+# Copy nginx config from root nginx folder
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+
+# Copy built static files from builder
+COPY --from=builder /app/build /usr/share/nginx/html
