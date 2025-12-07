@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build React test image
+        run: docker build -t 114338136/react-test -f ./client/Dockerfile.dev ./client
+
+      - name: Run tests in container
+        run: docker run 114338136/react-test npm run test -- --coverage
+
+  build-and-push:
+    runs-on: ubuntu-latest
+    needs: test
+    # Only build & push on pushes to main/master, not on PRs
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build images
+        # this mirrors your after_success block
+        run: |
+          docker build -t 114338136/multi-client ./client
+          docker build -t 114338136/multi-nginx ./nginx
+          docker build -t 114338136/multi-server ./server
+          docker build -t 114338136/multi-worker ./worker
+
+      - name: Push images
+        run: |
+          docker push 114338136/multi-client
+          docker push 114338136/multi-nginx
+          docker push 114338136/multi-server
+          docker push 114338136/multi-worker

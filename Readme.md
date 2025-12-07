@@ -16,6 +16,7 @@
 # Initailly, as part of all the code, I used https://github.com/James-O-Brien-Bandwidth/docker-compose as the repo.
 # However, as part of the tutorial, we cd into 'complex' and create a new repo.
 
+# TODO - Let's use GHA because Travis now charges ... and GHA is more relevant
 https://www.travis-ci.com/ 
 - You need to go there and sign up with your github account
 - Then authorize Travis to be able to integrate with your github repos
@@ -23,3 +24,5 @@ https://www.travis-ci.com/
 - You can find all company/your repos hooked into Travis at: https://app.travis-ci.com/dashboard 
 - our project is called 'multi-docker'
 - 
+
+# Okay, GHA has been added now :)
