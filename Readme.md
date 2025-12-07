@@ -12,3 +12,6 @@
 5. Travis pushes prod image to Docker hub
 6. Travis pushes project to AWS EB
 7. Elastic Beanstalk pulls images from Docker hub, and then deploys the code
+
+# Initailly, as part of all the code, I used https://github.com/James-O-Brien-Bandwidth/docker-compose as the repo.
+# However, as part of the tutorial, we cd into 'complex' and create a new repo.
