@@ -26,3 +26,19 @@ https://www.travis-ci.com/
 - 
 
 # Okay, GHA has been added now :)
+
+# Steps for prod deploy:
+# 1. (DONE) - Using a production docker-compose.yml file. Make sure you can run this file
+# 2. (DONE) - You need not have postgres and redids defined as we'll make them in AWS 
+# 3. (DONE) - Create AWS EB environment
+# 4. (DONE) - Create RDS 
+# 5. (DONE) - Create Redis ----> 
+# 6. (DONE) - Create Security Group
+# 7. (DONE) - Applying Security Groups to ElastiCache
+# 8. (DONE) - Applying Security Groups to RDS
+# 9. (DONE) - Applying Security Groups to Elastic Beanstalk
+# 10. Add AWS configuration details to github file's deploy script
+# 11. EB -> Setting Environment Variables
+# 12. IAM Keys for Deployment
+# 13. Create AWS keys in Github Secrets 
+# 14. Push any change to the main branch. And you should see Beanstalk update :) 
