@@ -1,5 +1,4 @@
-# Docker Compose ---> This will handle container communication automatically ... no need to link containers manually (which was the old way of doing it)
-version: "3"
+version: "2.4"
 services:
   client:
     #    restart: always

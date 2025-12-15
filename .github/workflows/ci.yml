@@ -73,7 +73,7 @@ jobs:
       # If you're using Dockerrun.aws.json + .ebextensions, this is what EB expects
       - name: Create deployment bundle
         run: |
-          zip -r deploy.zip docker-compose.yml .ebextensions -x '*.git*'
+          zip -r deploy.zip docker-compose.yml -x '*.git*'
 
       - name: Upload bundle to S3
         run: |
@@ -85,6 +85,7 @@ jobs:
             --application-name "${{ secrets.AWS_EB_APP }}" \
             --version-label "${GITHUB_SHA}" \
             --source-bundle S3Bucket="${{ secrets.AWS_EB_BUCKET }}",S3Key="${{ secrets.AWS_EB_BUCKET_PATH }}/deploy-${GITHUB_SHA}.zip"
+
 
       #todo probably don't need the version name there
       - name: Update EB environment
