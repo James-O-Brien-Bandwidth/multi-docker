@@ -3,13 +3,13 @@ version: "3"
 services:
   client:
     #    restart: always
-    image: "rallycoding/multi-client"
+    image: "${DOCKER_ID}/multi-client"
     mem_limit: 128m
     hostname: client
     #todo - api is what we should refer to
   server:
     #    restart: always
-    image: "rallycoding/multi-server"
+    image: "${DOCKER_ID}/multi-server"
     mem_limit: 128m
     hostname: api
     environment:
@@ -22,17 +22,20 @@ services:
       - PGPORT=$PGPORT
   worker:
     #    restart: always
-    image: "rallycoding/multi-worker"
+    image: "${DOCKER_ID}/multi-worker"
     mem_limit: 128m
     hostname: worker
     environment:
       - REDIS_HOST=$REDIS_HOST
       - REDIS_PORT=$REDIS_PORT
   nginx:
-    image: "rallycoding/multi-nginx"
+    image: "${DOCKER_ID}/multi-nginx"
     mem_limit: 128m
     hostname: nginx
     ports:
       - "80:80"
 
 # todo - No postgres or redis ... I suspect the reason for this is because on AWS ... we will have a dedicated RDS resource
+# I create these in IAM
+# AWS_ACCESS_KEY
+# AWS_SECRET_KEY

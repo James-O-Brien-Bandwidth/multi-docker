@@ -38,7 +38,11 @@ https://www.travis-ci.com/
 # 8. (DONE) - Applying Security Groups to RDS
 # 9. (DONE) - Applying Security Groups to Elastic Beanstalk
 # 10. Add AWS configuration details to github file's deploy script
-# 11. EB -> Setting Environment Variables
-# 12. IAM Keys for Deployment
+# 11. EB -> Setting Environment Variables:
+#     REDIS_HOST .... is one example 
+#     use primary endpoints ... trim the values of port and semi-colon off of the env variables ... 
+# 12. IAM Keys for Deployment:
+# create IAM user, 
 # 13. Create AWS keys in Github Secrets 
+# Create S3 bucket
 # 14. Push any change to the main branch. And you should see Beanstalk update :) 
