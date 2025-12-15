@@ -2,13 +2,13 @@ version: "2.4"
 services:
   client:
     #    restart: always
-    image: "${DOCKER_ID}/multi-client"
+    image: "114338136/multi-client"
     mem_limit: 128m
     hostname: client
     #todo - api is what we should refer to
   server:
     #    restart: always
-    image: "${DOCKER_ID}/multi-server"
+    image: "114338136/multi-server"
     mem_limit: 128m
     hostname: api
     environment:
@@ -21,14 +21,14 @@ services:
       - PGPORT=$PGPORT
   worker:
     #    restart: always
-    image: "${DOCKER_ID}/multi-worker"
+    image: "114338136/multi-worker"
     mem_limit: 128m
     hostname: worker
     environment:
       - REDIS_HOST=$REDIS_HOST
       - REDIS_PORT=$REDIS_PORT
   nginx:
-    image: "${DOCKER_ID}/multi-nginx"
+    image: "114338136/multi-nginx"
     mem_limit: 128m
     hostname: nginx
     ports:
