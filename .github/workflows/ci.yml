@@ -73,7 +73,7 @@ jobs:
       # If you're using Dockerrun.aws.json + .ebextensions, this is what EB expects
       - name: Create deployment bundle
         run: |
-          zip -r deploy.zip Dockerrun.aws.json .ebextensions -x '*.git*'
+          zip -r deploy.zip docker-compose.yml .ebextensions -x '*.git*'
 
       - name: Upload bundle to S3
         run: |
