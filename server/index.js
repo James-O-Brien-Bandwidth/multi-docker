@@ -34,8 +34,13 @@ const redisClient = redis.createClient({
 const redisPublisher = redisClient.duplicate();
 
 (async () => {
-  await redisClient.connect();
-  await redisPublisher.connect();
+  try {
+    await redisClient.connect();
+    await redisPublisher.connect();
+    console.log("Redis connected successfully");
+  } catch (err) {
+    console.error("Redis connection failed:", err.message);
+  }
 })();
 
 // Express route handlers
