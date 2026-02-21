@@ -31,26 +31,50 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up QEMU (enables cross-platform emulation)
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_ID }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build images
-        # this mirrors your after_success block
-        run: |
-          docker build -t ${{ secrets.DOCKER_ID }}/multi-client -f ./client/Dockerfile .
-          docker build -t ${{ secrets.DOCKER_ID }}/multi-nginx ./nginx
-          docker build -t ${{ secrets.DOCKER_ID }}/multi-server ./server
-          docker build -t ${{ secrets.DOCKER_ID }}/multi-worker ./worker
+      - name: Build and push multi-client
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./client/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKER_ID }}/multi-client:latest
 
-      - name: Push images
-        run: |
-          docker push ${{ secrets.DOCKER_ID }}/multi-client
-          docker push ${{ secrets.DOCKER_ID }}/multi-nginx
-          docker push ${{ secrets.DOCKER_ID }}/multi-server
-          docker push ${{ secrets.DOCKER_ID }}/multi-worker
+      - name: Build and push multi-nginx
+        uses: docker/build-push-action@v5
+        with:
+          context: ./nginx
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKER_ID }}/multi-nginx:latest
+
+      - name: Build and push multi-server
+        uses: docker/build-push-action@v5
+        with:
+          context: ./server
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKER_ID }}/multi-server:latest
+
+      - name: Build and push multi-worker
+        uses: docker/build-push-action@v5
+        with:
+          context: ./worker
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKER_ID }}/multi-worker:latest
 
   deploy:
     runs-on: ubuntu-latest

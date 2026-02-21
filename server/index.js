@@ -17,7 +17,7 @@ const pgClient = new Pool({
   database: keys.pgDatabase,
   password: keys.pgPassword,
   port: keys.pgPort,
-  ssl: { rejectUnauthorized: false },
+  ssl: process.env.PGSSL === "true" ? { rejectUnauthorized: false } : false,
 });
 
 pgClient.on("connect", (client) => {
@@ -51,14 +51,23 @@ app.get("/", (req, res) => {
 });
 
 app.get("/values/all", async (req, res) => {
-  const values = await pgClient.query("SELECT * from values");
-
-  res.send(values.rows);
+  try {
+    const values = await pgClient.query("SELECT * from values");
+    res.send(values.rows);
+  } catch (err) {
+    console.error("GET /values/all error:", err.message);
+    res.status(500).send("Database error");
+  }
 });
 
 app.get("/values/current", async (req, res) => {
-  const values = await redisClient.hGetAll("values");
-  res.send(values);
+  try {
+    const values = await redisClient.hGetAll("values");
+    res.send(values);
+  } catch (err) {
+    console.error("GET /values/current error:", err.message);
+    res.status(500).send("Redis error");
+  }
 });
 
 app.post("/values", async (req, res) => {
@@ -68,11 +77,15 @@ app.post("/values", async (req, res) => {
     return res.status(422).send("Index too high");
   }
 
-  await redisClient.hSet("values", index, "Nothing yet!");
-  await redisPublisher.publish("insert", index);
-  pgClient.query("INSERT INTO values(number) VALUES($1)", [index]);
-
-  res.send({ working: true });
+  try {
+    await redisClient.hSet("values", index, "Nothing yet!");
+    await redisPublisher.publish("insert", index);
+    pgClient.query("INSERT INTO values(number) VALUES($1)", [index]);
+    res.send({ working: true });
+  } catch (err) {
+    console.error("POST /values error:", err.message);
+    res.status(500).send("Server error");
+  }
 });
 
 app.listen(5000, (err) => {

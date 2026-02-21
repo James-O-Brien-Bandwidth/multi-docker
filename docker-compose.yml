@@ -18,6 +18,7 @@ services:
       - PGDATABASE=$PGDATABASE
       - PGPASSWORD=$PGPASSWORD
       - PGPORT=$PGPORT
+      - PGSSL=true
   worker:
     restart: always
     image: "114338136/multi-worker"
